@@ -2,7 +2,6 @@ package com.server.server.controllers;
 
 import com.server.server.dtos.*;
 import com.server.server.models.User;
-
 import com.server.server.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,6 +14,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/users")
+@CrossOrigin(originPatterns = "*", allowedHeaders = "*", allowCredentials = "true")
 public class UserController {
 
     private final UserService userService;
@@ -31,7 +31,7 @@ public class UserController {
     /**
      * Endpoint to create a new user.
      *
-     * @param userDTO The userDTO object containing details for creation.
+     * @param userCreationDTO The userCreationDTO object containing details for creation.
      * @return The response entity containing the HTTP status.
      */
     @PostMapping
@@ -44,8 +44,7 @@ public class UserController {
     /**
      * Endpoint to retrieve all users.
      *
-     * @return ResponseEntity<List < UserDTO>> The response entity containing a list
-     *         of users and HTTP status.
+     * @return ResponseEntity<List<UserDTO>> The response entity containing a list of users and HTTP status.
      */
     @GetMapping
     public ResponseEntity<List<UserDTO>> getAllUsers() {
@@ -58,8 +57,7 @@ public class UserController {
      * Endpoint to retrieve a user by ID.
      *
      * @param userId The unique identifier of the user.
-     * @return ResponseEntity<UserDTO> The response entity containing the user and
-     *         HTTP status.
+     * @return ResponseEntity<UserDTO> The response entity containing the user and HTTP status.
      */
     @GetMapping("/{userId}")
     public ResponseEntity<UserDTO> getUserById(@PathVariable int userId) {
@@ -74,9 +72,8 @@ public class UserController {
      * Endpoint to update a user by ID.
      *
      * @param userId The unique identifier of the user to be updated.
-     * @param user   The updated user object containing new details.
-     * @return ResponseEntity<UserDTO> The response entity containing the updated
-     *         user and HTTP status.
+     * @param UserCreationDTO The updated user object containing new details.
+     * @return ResponseEntity<UserDTO> The response entity containing the updated user and HTTP status.
      */
     @PutMapping("/{userId}")
     public ResponseEntity<UserDTO> updateUser(@PathVariable int userId, @RequestBody UserCreationDTO UserCreationDTO) {
@@ -95,8 +92,7 @@ public class UserController {
      * Endpoint to delete a user by ID.
      *
      * @param userId The unique identifier of the user to be deleted.
-     * @return ResponseEntity<Void> The response entity with HTTP status indicating
-     *         success or failure.
+     * @return ResponseEntity<Void> The response entity with HTTP status indicating success or failure.
      */
     @DeleteMapping("/{userId}")
     public ResponseEntity<Void> deleteUser(@PathVariable int userId) {
@@ -108,8 +104,7 @@ public class UserController {
      * Endpoint to verify a user's password by ID.
      *
      * @param userJSON User credentials.
-     * @return ResponseEntity<Boolean> The response entity containing true if the
-     *         password matches, false otherwise, along with HTTP status.
+     * @return ResponseEntity<AuthResponseDTO> The response entity containing the user and token along with HTTP status.
      */
     @PostMapping("/verify-password")
     public ResponseEntity<AuthResponseDTO> verifyPassword(@RequestBody String userJSON) {

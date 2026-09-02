@@ -1,0 +1,64 @@
+services:
+  frontend:
+    build:
+      context: ./client
+      args:
+        VITE_API_BASE_URL: "http://13.206.25.224:8080/api"
+    ports:
+       - "80:80"
+    container_name: ecommerce-app-frontend 
+    depends_on:
+      backend:
+        condition: service_healthy
+    networks:
+       - ecommerce-network
+    healthcheck:
+       test: ["CMD", "wget", "--spider", "-q", "http://localhost"]
+       interval: 15s
+       timeout: 5s
+       retries: 5
+       start_period: 10s
+
+  backend:
+     build:
+        context: ./server
+     ports:
+        - "8080:8080"
+     container_name: ecommerce-app-backend 
+     depends_on:
+       mysql:
+         condition: service_healthy
+     networks:
+        - "ecommerce-network"
+     healthcheck:
+        test: ["CMD", "wget", "--spider", "-q", "http://localhost:8080/actuator/health"]
+        interval: 15s
+        timeout: 5s
+        retries: 5
+        start_period: 40s
+
+  mysql:
+     image: mysql:latest
+     container_name: ecommerce-app-mysql
+     environment:
+        MYSQL_ROOT_PASSWORD: root
+        MYSQL_DATABASE: ecommerce
+     ports:
+        - "3306:3306"
+     networks:
+        - ecommerce-network
+     healthcheck:
+        test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-proot"]
+        interval: 10s
+        timeout: 5s
+        retries: 10
+        start_period: 30s
+
+     volumes: 
+       - mysql-data:/var/lib/mysql
+
+volumes: 
+     mysql-data:
+
+networks:
+     ecommerce-network:
