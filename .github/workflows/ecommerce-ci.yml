@@ -3,16 +3,7 @@
 name: ecommerce-app-ci
 
 on:
-    workflow_dispatch:
-        inputs:
-            environments:
-                description: select the environment wanted
-                required: true
-                type: choice
-                options:
-                    - dev
-                    - uat
-                    - prod
+   push
 
 permissions:
     contents: read
