@@ -35,9 +35,7 @@ jobs:
           with:
             node-version: ${{ matrix.node }}
             cache: 'npm'
-            cache-dependency-path: |
-                ./client/package-lock.json
-                ./server/package-lock.json
+            cache-dependency-path: client/package-lock.json
 
         - name: Install client Dependencies
           run: npm ci --prefix client
@@ -45,8 +43,16 @@ jobs:
         - name: Build client
           run: npm run build --prefix client
 
-        - name: Install server Dependencies
-          run: npm ci --prefix server
+        - name: Set up JDK
+          uses: actions/setup-java@v4
+          with:
+            java-version: '17' # Match the <java.version> in your server/pom.xml (e.g., 17 or 21)
+            distribution: 'temurin'
+            cache: 'maven'
+
+        - name: Build and test server
+          working-directory: ./server
+          run: ./mvnw test package -DskipTests=false
 
 
    build:
