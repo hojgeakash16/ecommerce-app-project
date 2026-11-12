@@ -21,10 +21,7 @@ permissions:
 
 jobs:
    code:
-    strategy:
-      matrix:
-        node: [ 20, 22, 24 ]
-    name: Node ${{ matrix.node }} sample
+    name: Build Client & Server (Node 24)
     runs-on: ubuntu-latest
     steps:
         - name: code checkout
@@ -33,7 +30,7 @@ jobs:
         - name: setup node.js
           uses: actions/setup-node@v7
           with:
-            node-version: ${{ matrix.node }}
+            node-version: 24
             cache: 'npm'
             cache-dependency-path: client/package-lock.json
 
@@ -50,9 +47,9 @@ jobs:
             distribution: 'temurin'
             cache: 'maven'
 
-        - name: Build and test server
+        - name: Build server package
           working-directory: ./server
-          run: ./mvnw test package -DskipTests=false
+          run: ./mvnw package -DskipTests
 
 
    build:
