@@ -16,7 +16,7 @@ RUN mvn clean package -DskipTests
 # ------------Stage 2 : Run with optimised image----------
 
 # Get  the optimised image
-FROM eclipse-temurin:17-jre-alpine AS run
+FROM eclipse-temurin:17-jre AS run
 
 # Create the working directory
 WORKDIR /app
