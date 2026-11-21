@@ -3,9 +3,8 @@
 name: democicd
 
 on:
-    push:
-        branches: [main]
-
+    workflow_dispatch:
+        
 jobs:
     code:
         runs-on: ubuntu-latest
