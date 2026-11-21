@@ -1,0 +1,35 @@
+# This is the demo ci-cd pipeline 
+
+name: democicd
+
+on:
+    push:
+        branches: [main]
+
+jobs:
+    code:
+        runs-on: ubuntu-latest
+        steps:
+            - name: code checkout
+              uses: actions/checkout@v7
+
+    build:
+        needs: code
+        runs-on: ubuntu-latest
+        steps:
+            - name: Setup Docker
+              uses: docker/setup-docker-action@v5
+
+    test:
+        needs: build
+        runs-on: ubuntu-latest
+        steps:
+            - name: Test the code
+              run: echo "Testing the Application"
+
+    deploy:
+        needs: ["code", "build", "test"]
+        runs-on: ubuntu-latest
+        steps:
+            - name: Deploying the App
+              run: echo "Deploying the Application"
