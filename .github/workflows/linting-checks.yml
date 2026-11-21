@@ -1,0 +1,33 @@
+# This is the workflow for linting checks
+
+name: linting checks
+
+on:
+    workflow_dispatch:
+
+permissions:
+  contents: read
+  security-events: write
+
+jobs:
+    linting-check:
+        runs-on: ubuntu-latest
+        steps:
+            - name: code checkout
+              uses: actions/checkout@v7
+
+            - name: Setup Java 17
+              uses: actions/setup-java@v4
+              with:
+                distribution: temurin
+                java-version: '17'
+                cache: maven
+
+            - name: Check Java Version
+              run: java -version
+
+            - name: Run Checkstyle
+              run: mvn checkstyle:check
+
+            - name: Run SpotBugs
+              run: mvn compile spotbugs:check
