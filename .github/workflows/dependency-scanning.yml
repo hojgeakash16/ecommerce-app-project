@@ -1,0 +1,42 @@
+# This is the workflow for dependency scanning
+
+name: dependency scan
+
+on:
+    workflow_dispatch:
+
+permissions:
+  contents: read
+  security-events: write
+
+jobs:
+    dependency-scan:
+        runs-on: ubuntu-latest
+        steps:
+            - name: code checkout
+              uses: actions/checkout@v7
+
+            - name: Set up Java
+              uses: actions/setup-java@v4
+              with:
+                distribution: temurin
+                java-version: '17'
+                cache: maven
+
+            - name: Run Trivy Dependency Scan
+              uses: aquasecurity/trivy-action@0.36.0
+              with:
+                scan-type: fs
+                scan-ref: .
+                scanners: vuln
+                severity: HIGH,CRITICAL
+                ignore-unfixed: true
+                format: sarif
+                output: trivy-dependency-results.sarif
+                exit-code: '1'
+
+            - name: Upload Trivy Results
+              if: always()
+              uses: github/codeql-action/upload-sarif@v4
+              with:
+                 sarif_file: trivy-dependency-results.sarif
