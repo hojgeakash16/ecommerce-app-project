@@ -29,7 +29,7 @@ jobs:
                 scan-type: fs
                 scan-ref: .
                 scanners: vuln
-                severity: HIGH,CRITICAL
+                severity: UNKNOWN,LOW,MEDIUM,HIGH,CRITICAL
                 ignore-unfixed: true
                 format: sarif
                 output: trivy-dependency-results.sarif
