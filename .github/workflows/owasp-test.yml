@@ -1,9 +1,9 @@
-# The worflow is for owasp testing post deployment
+# The workflow is for owasp testing post deployment
 
 name: OWASP test
 
 on:
-    workflow_dispatch:
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -11,43 +11,37 @@ permissions:
   security-events: write
 
 jobs:
-    owasp-test-scan:
-        runs-on: ubuntu-latest
-        steps:
-            - name: code checkout
-              uses: actions/checkout@v7
+  owasp-test-scan:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Code checkout
+        uses: actions/checkout@v7
 
-            - name: Start Application
-              run: |
-                docker compose up -d --build
+      - name: Start Application
+        run: |
+          docker compose up -d --build
 
-            - name: Check Docker Containers
-              run: |
-                docker compose ps
+      - name: Check Docker Containers
+        run: |
+          docker compose ps
 
-            - name: Start and verify Nginx on port 80
-              run: |
-                sudo systemctl start nginx || sudo service nginx start || true
-                curl -fsS --retry 10 --retry-delay 2 --retry-connrefused http://127.0.0.1/ > /dev/null
+      - name: Verify Application Health
+        run: |
+          for i in {1..30}; do
+            if curl -fsS http://127.0.0.1:80/ > /dev/null; then
+              echo "Application is healthy"
+              exit 0
+            fi
+            echo "Waiting for application..."
+            sleep 5
+          done
+          echo "Application failed to start"
+          docker compose ps
+          docker compose logs
+          exit 1
 
-            - name: Verify Application Health
-              run: |
-                for i in {1..30}; do
-                  if curl -fsS http://127.0.0.1:80/; then
-                    echo "Application is healthy"
-                    exit 0
-                  fi
-
-                  echo "Waiting for application..."
-                  sleep 5
-                done
-
-                echo "Application failed to start"
-                docker compose logs
-                exit 1
-
-            - name: OWASP ZAP Baseline Scan
-              uses: zaproxy/action-baseline@v0.15.0
-              with:
-                target: 'http://127.0.0.1/'
-                cmd_options: '-a'
+      - name: OWASP ZAP Baseline Scan
+        uses: zaproxy/action-baseline@v0.15.0
+        with:
+          target: 'http://127.0.0.1/'
+          cmd_options: '-a'
