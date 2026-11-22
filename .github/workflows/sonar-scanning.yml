@@ -3,19 +3,27 @@
 name: sonar scanning
 
 on:
-    workflow_dispatch:
+  workflow_dispatch:
 
 jobs:
-    sonar-scanning:
-        runs-on: ubuntu-latest
-        steps:
-            - name: code checkout
-              uses: actions/checkout@v7
+  sonar-scanning:
+    runs-on: ubuntu-latest
+    steps:
+      - name: code checkout
+        uses: actions/checkout@v7
 
-            - name: Run SonarQube analysis
-              working-directory: server
-              env:
-                SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-                SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
-                SONAR_PROJECT_KEY: com.server:server
-              run: ./mvnw org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.host.url=$SONAR_HOST_URL -Dsonar.token=$SONAR_TOKEN -Dsonar.projectKey=$SONAR_PROJECT_KEY
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: 'maven'
+          cache-dependency-path: server/pom.xml
+
+      - name: Run SonarQube analysis
+        working-directory: server
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+          SONAR_PROJECT_KEY: com.server:server
+        run: ./mvnw test-compile org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dcheckstyle.skip=true -Dsonar.host.url=$SONAR_HOST_URL -Dsonar.token=$SONAR_TOKEN -Dsonar.projectKey=$SONAR_PROJECT_KEY
