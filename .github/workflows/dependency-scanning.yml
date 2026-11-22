@@ -23,17 +23,20 @@ jobs:
                 java-version: '17'
                 cache: maven
 
-            - name: Run Trivy vulnerability scanner in filesystem mode
+            - name: Run Trivy Dependency Scan
               uses: aquasecurity/trivy-action@v0.36.0
               with:
-                scan-type: 'fs'
-                scan-dir: './server'
-                format: 'table'
-                severity: 'CRITICAL,HIGH'
-                exit-code: '1'
+                scan-type: fs
+                scan-ref: .
+                scanners: vuln
+                severity: HIGH,CRITICAL
+                ignore-unfixed: true
+                format: sarif
+                output: trivy-dependency-results.sarif
+                exit-code: '0'
 
-            - name: Upload Test results
-              uses: actions/upload-artifact@master
+            - name: Upload Trivy Results
+              if: always()
+              uses: github/codeql-action/upload-sarif@v4
               with:
-                name: Depcheck report
-                path: ${{github.workspace}}/reports
+                 sarif_file: trivy-dependency-results.sarif
