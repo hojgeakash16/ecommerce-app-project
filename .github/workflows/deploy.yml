@@ -1,0 +1,18 @@
+# The workflow is for deploying the pushed image
+
+name: Deploy
+
+on:
+    workflow_dispatch:
+
+jobs:
+    deploy:
+        runs-on: ubuntu-latest
+        steps:
+            - name: code checkout
+              uses: actions/checkout@v7
+
+            - name: run the containers
+              run: |
+                docker compose up -d --build
+                docker compose ps
