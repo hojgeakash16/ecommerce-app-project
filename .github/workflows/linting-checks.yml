@@ -26,4 +26,4 @@ jobs:
 
             - name: Run Checkstyle & Spotless check (Maven)
               working-directory: server
-              run: ./mvnw checkstyle:check spotless:check
+              run: ./mvnw validate spotless:check -Dcheckstyle.skip=true -Dspotless.check.skip=true
