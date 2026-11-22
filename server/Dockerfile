@@ -4,7 +4,7 @@
 FROM maven:3.9-eclipse-temurin-17 AS build
 
 # Set the working directory 
-WORKDIR /app
+WORKDIR /app/server
 
 # Copy the source code
 COPY pom.xml . 
