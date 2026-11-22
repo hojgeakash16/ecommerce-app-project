@@ -46,3 +46,4 @@ jobs:
           target: 'http://127.0.0.1/'
           cmd_options: '-a'
           issue_title: ''
+          allow_issue_writing: false
