@@ -11,7 +11,7 @@ COPY pom.xml .
 COPY src ./src
 
 # Install the dependencies
-RUN mvn clean package -DskipTests
+RUN ./mvnw package -DskipTests -Dcheckstyle.skip=true
 
 # ------------Stage 2 : Run with optimised image----------
 
