@@ -45,3 +45,4 @@ jobs:
         with:
           target: 'http://127.0.0.1/'
           cmd_options: '-a'
+          issue_title: ''
