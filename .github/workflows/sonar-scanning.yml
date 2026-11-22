@@ -1,0 +1,21 @@
+# This workflow is for sonar scanning
+
+name: sonar scanning
+
+on:
+    workflow_dispatch:
+
+jobs:
+    sonar-scanning:
+        runs-on: ubuntu-latest
+        steps:
+            - name: code checkout
+              uses: actions/checout@v7
+
+            - name: Run SonarQube analysis
+              working-directory: server
+              env:
+                SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+                SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+                SONAR_PROJECT_KEY: com.server:server
+              run: ./mvnw sonar:sonar -Dsonar.projectKey=$SONAR_PROJECT_KEY
