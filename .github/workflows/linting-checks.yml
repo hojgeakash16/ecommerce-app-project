@@ -25,4 +25,5 @@ jobs:
                 cache-dependency-path: server/pom.xml
 
             - name: Run Checkstyle & Spotless check (Maven)
-              run: /server/mvnw checkstyle:check spotless:check
+              working-directory: server
+              run: ./mvnw checkstyle:check spotless:check
