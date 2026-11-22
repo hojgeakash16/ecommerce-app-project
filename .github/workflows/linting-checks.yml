@@ -24,14 +24,5 @@ jobs:
                 cache: maven
                 cache-dependency-path: server/pom.xml
 
-            - name: Check Java Version
-              working-directory: server
-              run: java -version
-
-            - name: Run Checkstyle
-              working-directory: server
-              run: mvn checkstyle:check
-
-            - name: Run SpotBugs
-              working-directory: server
-              run: mvn compile spotbugs:check
+            - name: Run Checkstyle & Spotless check (Maven)
+              run: ./mvnw checkstyle:check spotless:check
