@@ -3,7 +3,7 @@
 name: sonar scanning
 
 on:
-  workflow_dispatch:
+  workflow_call:
 
 jobs:
   sonar-scanning:

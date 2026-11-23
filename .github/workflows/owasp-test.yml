@@ -3,7 +3,7 @@
 name: OWASP test
 
 on:
-  workflow_dispatch:
+  workflow_call:
 
 permissions:
   contents: read
